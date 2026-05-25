@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>🔮 Tarot Virtual — Oráculo Digital</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --void:    #04020d;
+  --abyss:   #080417;
+  --deep:    #0d0824;
+  --mist:    #1a1035;
+  --veil:    #251845;
+  --purple:  #6d28d9;
+  --violet:  #8b5cf6;
+  --lavender:#c4b5fd;
+  --lilac:   #ddd6fe;
+  --gold:    #f59e0b;
+  --amber:   #fbbf24;
+  --cream:   #fef3c7;
+  --rose:    #f43f5e;
+  --cyan:    #06b6d4;
+  --ghost:   rgba(255,255,255,0.04);
+  --border:  rgba(139,92,246,0.2);
+  --glow:    rgba(139,92,246,0.4);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cinzel', serif;
+  background: var(--void);
+  color: var(--lilac);
+  min-height: 100vh;
+  overflow-x: hidden;
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20'%3E%3Ccircle cx='10' cy='10' r='4' fill='%238b5cf6' opacity='0.8'/%3E%3Ccircle cx='10' cy='10' r='8' fill='none' stroke='%238b5cf6' stroke-width='1' opacity='0.4'/%3E%3C/svg%3E") 10 10, auto;
+}
+
+/* ─── FONDO ─── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(196,181,253,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 80% 10%, rgba(196,181,253,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 50% 60%, rgba(251,191,36,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 10% 80%, rgba(196,181,253,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 70%, rgba(251,191,36,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 15%, rgba(196,181,253,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 85%, rgba(196,181,253,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 50%, rgba(251,191,36,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 40%, rgba(196,181,253,0.4) 0%, transparent 100%),
+    radial-gradient(2px 2px at 45% 25%, rgba(251,191,36,0.5) 0%, transparent 100%),
+    radial-gradient(2px 2px at 88% 55%, rgba(196,181,253,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 90%, rgba(196,181,253,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 5%, rgba(251,191,36,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 5% 20%, rgba(196,181,253,0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 95% 30%, rgba(196,181,253,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 70%, rgba(251,191,36,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 95%, rgba(196,181,253,0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 45%, rgba(196,181,253,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 75%, rgba(251,191,36,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 85%, rgba(196,181,253,0.3) 0%, transparent 100%);
+  pointer-events: none; z-index: 0;
+  animation: twinkle 8s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  0%   { opacity: 0.6; }
+  50%  { opacity: 1; }
+  100% { opacity: 0.7; }
+}
+
+/* ─── pantalla ─── */
+#login-screen, #app { position: relative; z-index: 1; }
+
+/* ════════════════════════════════════
+   LOGIN, realizacion de sesion 
+════════════════════════════════════ */
+#login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.seer-container {
+  position: relative;
+  width: 180px; height: 220px;
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+.seer-svg { width: 100%; height: 100%; }
+
+/* orb pulse */
+.orb-glow {
+  animation: orbPulse 2s ease-in-out infinite;
+  transform-origin: 90px 160px;
+}
+@keyframes orbPulse {
+  0%, 100% { opacity: 0.6; r: 22px; }
+  50%       { opacity: 1;   r: 26px; }
+}
+
+/* eye blink */
+.eye-left, .eye-right {
+  animation: blink 5s ease-in-out infinite;
+  transform-origin: center;
+}
+.eye-right { animation-delay: 0.1s; }
+@keyframes blink {
+  0%, 90%, 100% { scaleY: 1; }
+  95%            { transform: scaleY(0.1); }
+}
+
+/* mystic particles around seer */
+.particle {
+  position: absolute;
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gold);
+  animation: orbit 3s linear infinite;
+}
+.particle:nth-child(1) { animation-delay: 0s;   top: 20px;  left: -10px; }
+.particle:nth-child(2) { animation-delay: 1s;   top: 100px; left: 190px; background: var(--violet); }
+.particle:nth-child(3) { animation-delay: 2s;   top: 200px; left: 30px;  background: var(--lavender); }
+@keyframes orbit {
+  0%   { transform: translateY(0) scale(1);   opacity: 1; }
+  50%  { transform: translateY(-20px) scale(1.5); opacity: 0.5; }
+  100% { transform: translateY(0) scale(1);   opacity: 1; }
+}
+
+.login-card {
+  background: rgba(13,8,36,0.85);
+  border: 1px solid var(--glow);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 380px;
+  max-width: 95vw;
+  text-align: center;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px rgba(109,40,217,0.3), inset 0 1px 0 rgba(196,181,253,0.1);
+}
+
+.login-title {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 1.5rem;
+  color: var(--amber);
+  margin-bottom: 0.2rem;
+  text-shadow: 0 0 20px rgba(251,191,36,0.5);
+}
+
+.login-sub {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: var(--lavender);
+  font-size: 0.85rem;
+  margin-bottom: 1.75rem;
+  opacity: 0.7;
+}
+
+.field-group { position: relative; margin-bottom: 1rem; text-align: left; }
+.field-label {
+  display: block;
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  color: var(--violet);
+  text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.field-input {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--lilac);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.field-input:focus {
+  border-color: var(--violet);
+  box-shadow: 0 0 0 3px rgba(139,92,246,0.15);
+}
+.field-input::placeholder { color: rgba(196,181,253,0.3); }
+.field-input option { background: var(--deep); }
+
+.btn-enter {
+  width: 100%;
+  padding: 0.85rem;
+  border-radius: 10px;
+  border: none;
+  background: linear-gradient(135deg, #4c1d95, #6d28d9, #7c3aed);
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(109,40,217,0.5);
+  text-transform: uppercase;
+  margin-top: 0.5rem;
+}
+.btn-enter:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(109,40,217,0.7);
+}
+.btn-enter:active { transform: translateY(0); }
+
+.login-err {
+  color: var(--rose);
+  font-size: 0.8rem;
+  margin-top: 0.75rem;
+  display: none;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+}
+
+.login-hint {
+  margin-top: 1.25rem;
+  padding: 0.75rem;
+  border-radius: 8px;
+  background: rgba(109,40,217,0.1);
+  border: 1px solid rgba(109,40,217,0.2);
+  font-size: 0.72rem;
+  color: rgba(196,181,253,0.6);
+  line-height: 1.6;
+  text-align: left;
+  font-family: 'Courier Prime', monospace;
+}
+
+/* ════════════════════════════════════
+   MAIN APP diseño despues de ingresar 
+════════════════════════════════════ */
+#app { display: none; flex-direction: column; min-height: 100vh; }
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 60px;
+  background: rgba(8,4,23,0.9);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  position: sticky; top: 0; z-index: 100;
+}
+
+.brand {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 1rem;
+  color: var(--amber);
+  text-shadow: 0 0 15px rgba(251,191,36,0.4);
+  letter-spacing: 1px;
+}
+
+.nav-right { display: flex; align-items: center; gap: 0.75rem; }
+
+.nav-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.8rem; color: #fff;
+  background: linear-gradient(135deg, var(--purple), var(--violet));
+  box-shadow: 0 0 12px rgba(139,92,246,0.5);
+}
+
+.nav-info { line-height: 1.3; }
+.nav-name { font-size: 0.82rem; font-weight: 700; color: var(--lilac); }
+.nav-role { font-size: 0.68rem; color: var(--lavender); opacity: 0.6; }
+
+.role-chip {
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+}
+.chip-superadmin { background: rgba(245,158,11,0.2); color: var(--amber); border: 1px solid rgba(245,158,11,0.4); }
+.chip-admin      { background: rgba(139,92,246,0.2); color: var(--lavender); border: 1px solid rgba(139,92,246,0.4); }
+.chip-usuario    { background: rgba(6,182,212,0.15); color: var(--cyan); border: 1px solid rgba(6,182,212,0.3); }
+.chip-consultor  { background: rgba(16,185,129,0.15); color: #34d399; border: 1px solid rgba(16,185,129,0.3); }
+
+.btn-logout {
+  padding: 0.4rem 0.9rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--lavender);
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.btn-logout:hover { background: rgba(139,92,246,0.1); border-color: var(--violet); }
+
+/* TABS */
+.tabs {
+  display: flex;
+  padding: 0 2rem;
+  border-bottom: 1px solid var(--border);
+  background: rgba(8,4,23,0.6);
+  overflow-x: auto;
+  gap: 0;
+}
+
+.tab-btn {
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: transparent;
+  color: rgba(196,181,253,0.45);
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+.tab-btn.active { color: var(--amber); border-bottom-color: var(--amber); }
+.tab-btn:hover:not(.active) { color: var(--lavender); }
+.tab-btn.hidden { display: none !important; }
+
+/* CONTENT */
+.tab-content { padding: 2rem; flex: 1; }
+.tab-panel   { display: none; }
+.tab-panel.active { display: block; }
+
+/* ─── SECTION HEADER ─── */
+.sec-title {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 1.2rem;
+  color: var(--amber);
+  margin-bottom: 0.35rem;
+  text-shadow: 0 0 20px rgba(251,191,36,0.3);
+}
+.sec-desc {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  color: rgba(196,181,253,0.55);
+  font-size: 0.88rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ════════════════════════════════════
+   TAB 1 — TAROT
+════════════════════════════════════ */
+.tarot-wrap { max-width: 820px; margin: 0 auto; }
+
+.tarot-form { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+.tarot-textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--ghost);
+  color: var(--lilac);
+  font-family: 'IM Fell English', serif;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 90px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.tarot-textarea:focus { border-color: var(--violet); }
+.tarot-textarea::placeholder { color: rgba(196,181,253,0.25); font-style: italic; }
+
+.btn-reveal {
+  align-self: flex-start;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  border: 1px solid rgba(251,191,36,0.4);
+  background: linear-gradient(135deg, rgba(109,40,217,0.6), rgba(139,92,246,0.6));
+  color: var(--cream);
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(109,40,217,0.3);
+}
+.btn-reveal:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(251,191,36,0.3); border-color: var(--amber); }
+
+/* Cards */
+.cards-row {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+
+.arcana-card {
+  flex: 1; min-width: 200px;
+  background: rgba(13,8,36,0.8);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.5rem 1rem;
+  text-align: center;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+}
+.arcana-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at top, rgba(139,92,246,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+.arcana-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(109,40,217,0.3); border-color: var(--glow); }
+
+.card-arcana-img {
+  width: 80px; height: 80px;
+  margin: 0 auto 0.75rem;
+  display: block;
+}
+.card-position {
+  font-size: 0.62rem; letter-spacing: 3px;
+  color: var(--violet); text-transform: uppercase;
+  margin-bottom: 0.4rem;
+}
+.card-arcana-name {
+  font-family: 'Cinzel Decorative', cursive;
+  font-size: 0.85rem;
+  color: var(--amber);
+  margin-bottom: 0.4rem;
+  text-shadow: 0 0 10px rgba(251,191,36,0.3);
+}
+.card-arcana-num {
+  font-size: 0.7rem;
+  color: var(--lavender);
+  opacity: 0.6;
+  margin-bottom: 0.5rem;
+}
+.card-arcana-energy {
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+  font-size: 0.78rem;
+  color: var(--lavender);
+  opacity: 0.6;
+}
+
+.reading-box {
+  background: rgba(13,8,36,0.7);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 14px;
+  padding: 1.5rem;
+  display: none;
+  position: relative;
+  overflow: hidden;
+}
+.reading-box::before {
+  content: '✦';
+  position: absolute; top: 12px; right: 16px;
+  font-size: 1.2rem; color: var(--amber); opacity: 0.3;
+}
+.reading-box h3 {
+  font-family: 'Cinzel Decorative', cursive;
+  color: var(--amber); font-size: 0.9rem;
+  margin-bottom: 0.85rem; letter-spacing: 1px;
+}
+.reading-box p {
+  font-family: 'IM Fell English', serif;
+  color: var(--lavender); line-height: 1.8;
+  font-size: 0.95rem; white-space: pre-line;
+}
+
+/* ════════════════════════════════════
+   TAB 2 — CONSULTAS
+════════════════════════════════════ */
+.queries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 0.85rem;
+}
+
+.qcard {
+  background: var(--ghost);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.qcard:hover { border-color: var(--glow); background: rgba(109,40,217,0.08); transform: translateY(-2px); }
+.qcard-num   { font-size: 0.65rem; color: var(--violet); font-weight: 700; letter-spacing: 2px; margin-bottom: 0.3rem; }
+.qcard-title { font-size: 0.85rem; font-weight: 700; color: var(--lilac); margin-bottom: 0.25rem; }
+.qcard-desc  { font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.78rem; color: rgba(196,181,253,0.5); }
+
+.qresult {
+  margin-top: 1.5rem;
+  background: var(--ghost);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  display: none;
+}
+.qresult-title {
+  font-family: 'Cinzel Decorative', cursive;
+  color: var(--amber); font-size: 0.85rem;
+  margin-bottom: 1rem; letter-spacing: 1px;
+}
+
+/* TABLE */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+th {
+  text-align: left; padding: 0.55rem 0.75rem;
+  background: rgba(109,40,217,0.2);
+  color: var(--lavender); font-weight: 700;
+  font-size: 0.7rem; letter-spacing: 1px; text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: var(--lavender);
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(109,40,217,0.06); }
+
+/* ════════════════════════════════════
+   TAB 3 — CONSOLA SQL
+════════════════════════════════════ */
+.console-wrap { max-width: 950px; }
+
+.perm-warn, .perm-block {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+  display: none;
+  font-family: 'IM Fell English', serif;
+  font-style: italic;
+}
+.perm-warn  { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); color: var(--amber); }
+.perm-block { background: rgba(244,63,94,0.1);  border: 1px solid rgba(244,63,94,0.3);  color: var(--rose); }
+
+.sql-textarea {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid rgba(139,92,246,0.3);
+  background: #030112;
+  color: #a0ff80;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.9rem;
+  resize: vertical;
+  min-height: 130px;
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 1rem;
+}
+.sql-textarea:focus { border-color: var(--violet); }
+
+.console-btns { display: flex; gap: 0.75rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+
+.btn-run {
+  padding: 0.6rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, #064e3b, #065f46, #059669);
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+.btn-run:hover { opacity: 0.85; transform: translateY(-1px); }
+
+.btn-clear-c {
+  padding: 0.6rem 1.1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: rgba(196,181,253,0.5);
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+}
+.btn-clear-c:hover { color: var(--lavender); border-color: var(--violet); }
+
+.console-out {
+  background: #020010;
+  border: 1px solid rgba(100,80,150,0.3);
+  border-radius: 10px;
+  padding: 1rem 1.25rem;
+  min-height: 220px;
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.82rem;
+  color: #a0ff80;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  line-height: 1.6;
+}
+.out-err  { color: #f87171; }
+.out-info { color: #60a5fa; }
+.out-ok   { color: #34d399; }
+
+/* ════════════════════════════════════
+   TAB 4 — GESTIÓN DE USUARIOS
+════════════════════════════════════ */
+.user-mgmt { max-width: 800px; }
+
+.create-user-form {
+  background: var(--ghost);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+.form-title {
+  font-family: 'Cinzel Decorative', cursive;
+  color: var(--amber); font-size: 0.85rem;
+  margin-bottom: 1.25rem; letter-spacing: 1px;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+@media (max-width: 550px) { .form-grid { grid-template-columns: 1fr; } }
+
+.form-field { display: flex; flex-direction: column; gap: 0.35rem; }
+.form-label {
+  font-size: 0.62rem; letter-spacing: 2px;
+  color: var(--violet); text-transform: uppercase;
+}
+.form-input, .form-select {
+  padding: 0.65rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.04);
+  color: var(--lilac);
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.form-input:focus, .form-select:focus { border-color: var(--violet); }
+.form-input::placeholder { color: rgba(196,181,253,0.3); }
+.form-select option { background: var(--deep); }
+
+.btn-create {
+  padding: 0.65rem 1.75rem;
+  border-radius: 8px;
+  border: none;
+  background: linear-gradient(135deg, var(--purple), var(--violet));
+  color: #fff;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.25s;
+  text-transform: uppercase;
+}
+.btn-create:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(109,40,217,0.5); }
+
+.form-msg { font-size: 0.8rem; margin-top: 0.6rem; font-family: 'IM Fell English', serif; font-style: italic; display: none; }
+.form-msg.ok  { color: #34d399; }
+.form-msg.err { color: var(--rose); }
+
+/* User list */
+.user-list-title {
+  font-family: 'Cinzel Decorative', cursive;
+  color: var(--amber); font-size: 0.85rem;
+  margin-bottom: 1rem; letter-spacing: 1px;
+}
+
+.user-list { display: flex; flex-direction: column; gap: 0.6rem; }
+
+.user-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--ghost);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+}
+.user-item-info { display: flex; align-items: center; gap: 0.75rem; }
+.user-item-av {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--purple), var(--violet));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.72rem; font-weight: 700; color: #fff;
+}
+.user-item-name { font-size: 0.85rem; font-weight: 700; color: var(--lilac); }
+.user-item-role { font-size: 0.7rem; color: rgba(196,181,253,0.5); }
+
+.btn-del {
+  padding: 0.3rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid rgba(244,63,94,0.3);
+  background: transparent;
+  color: var(--rose);
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: 'Cinzel', serif;
+}
+.btn-del:hover { background: rgba(244,63,94,0.1); }
+.btn-del.hidden { display: none; }
+
+/* ════════════════════════════════════
+   LOADER
+════════════════════════════════════ */
+.spinner {
+  display: inline-block;
+  width: 12px; height: 12px;
+  border: 2px solid rgba(255,255,255,0.2);
+  border-top-color: var(--amber);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  vertical-align: middle; margin-left: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-msg { color: rgba(196,181,253,0.4); font-family: 'IM Fell English', serif; font-style: italic; font-size: 0.88rem; }
+
+/* ─── DIVIDER ─── */
+.mystic-divider {
+  text-align: center;
+  color: var(--violet);
+  font-size: 0.7rem;
+  letter-spacing: 4px;
+  margin: 1.5rem 0;
+  opacity: 0.4;
+}
+
+/* ─── SCROLLBAR ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ LOGIN ══════════════════════════ -->
+<div id="login-screen">
+
+  <!-- Seer character -->
+  <div class="seer-container">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <svg class="seer-svg" viewBox="0 0 180 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="skinGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#c4a882"/>
+          <stop offset="100%" stop-color="#8b6a3e"/>
+        </radialGradient>
+        <radialGradient id="robeGrad" cx="50%" cy="30%" r="80%">
+          <stop offset="0%" stop-color="#3b1d6b"/>
+          <stop offset="100%" stop-color="#1a0d33"/>
+        </radialGradient>
+        <radialGradient id="orbGrad" cx="40%" cy="35%" r="60%">
+          <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.9"/>
+          <stop offset="50%" stop-color="#6d28d9" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#2e1065" stop-opacity="0.9"/>
+        </radialGradient>
+        <filter id="glowF">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="softGlow">
+          <feGaussianBlur stdDeviation="5" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Robe / body -->
+      <ellipse cx="90" cy="175" rx="65" ry="55" fill="url(#robeGrad)"/>
+      <path d="M40 140 Q60 130 90 128 Q120 130 140 140 L150 220 L30 220 Z" fill="url(#robeGrad)"/>
+
+      <!-- Mystic robe details -->
+      <path d="M90 128 L75 180 M90 128 L105 180" stroke="#6d28d9" stroke-width="1" opacity="0.4"/>
+      <path d="M55 155 Q90 148 125 155" stroke="#8b5cf6" stroke-width="0.8" opacity="0.3" fill="none"/>
+
+      <!-- Star symbols on robe -->
+      <text x="68" y="170" font-size="10" fill="#f59e0b" opacity="0.4" text-anchor="middle">✦</text>
+      <text x="112" y="165" font-size="8" fill="#8b5cf6" opacity="0.4" text-anchor="middle">✦</text>
+      <text x="90" y="195" font-size="6" fill="#f59e0b" opacity="0.3" text-anchor="middle">✦ ✦ ✦</text>
+
+      <!-- Neck -->
+      <rect x="79" y="110" width="22" height="22" rx="5" fill="url(#skinGrad)"/>
+
+      <!-- Head -->
+      <ellipse cx="90" cy="92" rx="32" ry="36" fill="url(#skinGrad)"/>
+
+      <!-- Hair / hood -->
+      <path d="M58 78 Q55 50 90 44 Q125 50 122 78 Q118 60 90 58 Q62 60 58 78 Z" fill="#1a0830"/>
+      <path d="M58 78 Q50 90 52 105 Q56 88 65 85 Z" fill="#1a0830"/>
+      <path d="M122 78 Q130 90 128 105 Q124 88 115 85 Z" fill="#1a0830"/>
+
+      <!-- Hood details -->
+      <path d="M58 72 Q90 62 122 72" stroke="#6d28d9" stroke-width="1" fill="none" opacity="0.5"/>
+
+      <!-- Crescent moon on head -->
+      <path d="M82 50 Q85 42 92 44 Q86 44 85 50 Z" fill="#f59e0b" opacity="0.8" filter="url(#glowF)"/>
+
+      <!-- Eyes -->
+      <ellipse class="eye-left"  cx="78" cy="92" rx="5.5" ry="5" fill="#1a0830"/>
+      <ellipse class="eye-right" cx="102" cy="92" rx="5.5" ry="5" fill="#1a0830"/>
+      <!-- Iris glow -->
+      <circle cx="78" cy="92" r="3" fill="#8b5cf6" opacity="0.9" filter="url(#glowF)"/>
+      <circle cx="102" cy="92" r="3" fill="#8b5cf6" opacity="0.9" filter="url(#glowF)"/>
+      <circle cx="77" cy="91" r="1" fill="#fff" opacity="0.8"/>
+      <circle cx="101" cy="91" r="1" fill="#fff" opacity="0.8"/>
+
+      <!-- Third eye on forehead -->
+      <ellipse cx="90" cy="78" rx="4" ry="3" fill="#f59e0b" opacity="0.6" filter="url(#softGlow)"/>
+      <circle cx="90" cy="78" r="1.5" fill="#fbbf24" opacity="0.9"/>
+
+      <!-- Eyebrows -->
+      <path d="M72 85 Q78 82 84 85" stroke="#5b3a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M96 85 Q102 82 108 85" stroke="#5b3a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Nose -->
+      <path d="M88 97 Q90 100 92 97" stroke="#8b6a3e" stroke-width="1" fill="none"/>
+
+      <!-- Mouth — subtle smile -->
+      <path d="M84 106 Q90 110 96 106" stroke="#8b6a3e" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+
+      <!-- Veil / scarf -->
+      <path d="M60 110 Q65 115 90 112 Q115 115 120 110 Q116 125 90 123 Q64 125 60 110 Z" fill="#2d1050" opacity="0.7"/>
+      <path d="M60 110 Q64 106 90 108 Q116 106 120 110" stroke="#8b5cf6" stroke-width="0.8" fill="none" opacity="0.5"/>
+
+      <!-- Earrings -->
+      <circle cx="58" cy="100" r="3" fill="#f59e0b" filter="url(#glowF)"/>
+      <circle cx="122" cy="100" r="3" fill="#f59e0b" filter="url(#glowF)"/>
+
+      <!-- Left arm / hand -->
+      <path d="M55 140 Q40 145 38 158 Q35 168 42 170" stroke="url(#skinGrad)" stroke-width="12" fill="none" stroke-linecap="round"/>
+
+      <!-- Crystal ball pedestal -->
+      <rect x="72" y="158" width="36" height="8" rx="3" fill="#2d1050"/>
+      <ellipse cx="90" cy="158" rx="20" ry="5" fill="#3b1d6b" opacity="0.7"/>
+
+      <!-- Crystal ball -->
+      <circle class="orb-glow" cx="90" cy="138" r="24" fill="url(#orbGrad)" filter="url(#softGlow)" opacity="0.85"/>
+      <circle cx="90" cy="138" r="24" fill="none" stroke="#a78bfa" stroke-width="0.8" opacity="0.5"/>
+      <!-- Inner reflections -->
+      <ellipse cx="82" cy="130" rx="6" ry="4" fill="white" opacity="0.12" transform="rotate(-30 82 130)"/>
+      <circle cx="83" cy="129" r="2" fill="white" opacity="0.18"/>
+      <!-- Inner galaxy swirl -->
+      <path d="M90 125 Q96 130 92 138 Q88 145 94 150" stroke="#c4b5fd" stroke-width="0.8" fill="none" opacity="0.4"/>
+      <path d="M84 130 Q88 135 86 142" stroke="#f59e0b" stroke-width="0.8" fill="none" opacity="0.3"/>
+      <circle cx="90" cy="138" r="4" fill="#f59e0b" opacity="0.15"/>
+    </svg>
+  </div>
+
+  <!-- Login form -->
+  <div class="login-card">
+    <div class="login-title">🔮 Tarot Virtual</div>
+    <div class="login-sub">El oráculo te aguarda. Identifícate para continuar.</div>
+
+    <div class="field-group">
+      <label class="field-label">Usuario</label>
+      <input class="field-input" type="text" id="l-user" placeholder="nombre de usuario" autocomplete="off"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Contraseña</label>
+      <input class="field-input" type="password" id="l-pass" placeholder="••••••••"/>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Rol</label>
+      <select class="field-input" id="l-role">
+        <option value="">— Selecciona tu rol —</option>
+        <option value="superadmin">Superadmin</option>
+        <option value="admin">Administrador</option>
+        <option value="usuario">Usuario</option>
+        <option value="consultor">Consultor</option>
+      </select>
+    </div>
+    <button class="btn-enter" onclick="App.login()">✦ Entrar al Oráculo ✦</button>
+    <div class="login-err" id="l-err">⚠ Las energías no se alinean. Verifica tus datos.</div>
+
+    <div class="login-hint">
+      superadmin / pass: oracle2024<br>
+      admin      / pass: admin123<br>
+      consultor1 / pass: consult1<br>
+      usuario1   / pass: user1234
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════ APP ══════════════════════════ -->
+<div id="app">
+  <nav class="navbar">
+    <span class="brand">🔮 Tarot Virtual</span>
+    <div class="nav-right">
+      <div class="nav-avatar" id="n-av">—</div>
+      <div class="nav-info">
+        <div class="nav-name" id="n-name">—</div>
+        <div class="nav-role" id="n-role">—</div>
+      </div>
+      <span class="role-chip" id="n-chip">—</span>
+      <button class="btn-logout" onclick="App.logout()">Cerrar sesión</button>
+    </div>
+  </nav>
+
+  <div class="tabs" id="tabs-bar">
+    <button class="tab-btn active"  data-tab="0" onclick="App.tab(0,this)">🃏 Tarot</button>
+    <button class="tab-btn"         data-tab="1" onclick="App.tab(1,this)">📊 Consultas</button>
+    <button class="tab-btn tab-sql" data-tab="2" onclick="App.tab(2,this)">💻 Consola SQL</button>
+    <button class="tab-btn tab-mgr" data-tab="3" onclick="App.tab(3,this)">👥 Usuarios</button>
+  </div>
+
+  <div class="tab-content">
+
+    <!-- ── TAB 0: TAROT ── -->
+    <div class="tab-panel active" id="p0">
+      <div class="tarot-wrap">
+        <div class="sec-title">✦ Consulta con el Tarot</div>
+        <div class="sec-desc">Escribe tu pregunta. El oráculo revelará tres arcanos para guiarte.</div>
+        <div class="tarot-form">
+          <textarea class="tarot-textarea" id="t-q" placeholder="¿Qué inquietud deseas explorar hoy...?"></textarea>
+          <button class="btn-reveal" onclick="Tarot.leer()">✨ Revelar los Arcanos</button>
+        </div>
+        <div class="cards-row" id="cards-row"></div>
+        <div class="reading-box" id="reading-box">
+          <h3>📖 Revelación del Oráculo</h3>
+          <p id="reading-txt"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 1: CONSULTAS ── -->
+    <div class="tab-panel" id="p1">
+      <div class="sec-title">✦ 20 Consultas Predeterminadas</div>
+      <div class="sec-desc">Consultas JOIN sobre las tablas de la base de datos. Haz clic para ejecutar.</div>
+      <div class="queries-grid" id="qgrid"></div>
+      <div class="qresult" id="qresult">
+        <div class="qresult-title" id="qrtitle">Resultado</div>
+        <div id="qrbody"></div>
+      </div>
+    </div>
+
+    <!-- ── TAB 2: CONSOLA ── -->
+    <div class="tab-panel" id="p2">
+      <div class="console-wrap">
+        <div class="sec-title">✦ Consola de Consultas SQL</div>
+        <div class="sec-desc">Ejecuta consultas directamente sobre la base de datos de Supabase.</div>
+        <div class="perm-warn"  id="pw">⚠ Tu rol solo permite consultas SELECT. Operaciones de escritura no disponibles.</div>
+        <div class="perm-block" id="pb">🚫 No tienes acceso a la consola SQL.</div>
+        <div id="console-ui">
+          <textarea class="sql-textarea" id="sql-in" placeholder="SELECT v.nombre, v.especialidad, COUNT(s.id_sesion) as total_sesiones&#10;FROM VIDENTE v&#10;LEFT JOIN SESION s ON v.id_vidente = s.id_vidente&#10;GROUP BY v.id_vidente, v.nombre, v.especialidad&#10;ORDER BY total_sesiones DESC;"></textarea>
+          <div class="console-btns">
+            <button class="btn-run" onclick="SQL.run()">▶ Ejecutar</button>
+            <button class="btn-clear-c" onclick="SQL.clear()">Limpiar</button>
+          </div>
+          <div class="console-out" id="cout"><span class="out-info">-- Consola lista. Escribe tu consulta SQL y presiona Ejecutar.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── TAB 3: GESTIÓN USUARIOS ── -->
+    <div class="tab-panel" id="p3">
+      <div class="user-mgmt">
+        <div class="sec-title">✦ Gestión de Usuarios</div>
+        <div class="sec-desc">Administra los usuarios del sistema de Tarot Virtual.</div>
+
+        <div class="create-user-form" id="create-form">
+          <div class="form-title">➕ Crear Nuevo Usuario</div>
+          <div class="form-grid">
+            <div class="form-field">
+              <label class="form-label">Usuario</label>
+              <input class="form-input" type="text" id="nu-user" placeholder="nombre_usuario"/>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Contraseña</label>
+              <input class="form-input" type="password" id="nu-pass" placeholder="••••••••"/>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Nombre completo</label>
+              <input class="form-input" type="text" id="nu-name" placeholder="Nombre Apellido"/>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Rol</label>
+              <select class="form-select" id="nu-role">
+                <option value="">— Seleccionar rol —</option>
+                <option value="admin">Administrador</option>
+                <option value="consultor">Consultor</option>
+                <option value="usuario">Usuario</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn-create" onclick="Users.crear()">✦ Crear Usuario</button>
+          <div class="form-msg" id="nu-msg"></div>
+        </div>
+
+        <div class="user-list-title">Usuarios Registrados</div>
+        <div class="user-list" id="ulist"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//  SUPABASE CONFIG
+// ══════════════════════════════════════════════
+const SB_URL = 'https://ubamtnfbdouxzymkckdp.supabase.co';
+const SB_KEY = 'sb_publishable_wSTnE7hHVz3JA0U-piCWQg_hr6izYgu';
+
+// ══════════════════════════════════════════════
+//  SUPABASE CLIENT — REST directo (sin RPC)
+// ══════════════════════════════════════════════
+const DB = {
+  headers: {
+    'Content-Type':  'application/json',
+    'apikey':        SB_KEY,
+    'Authorization': `Bearer ${SB_KEY}`,
+    'Prefer':        'return=representation'
+  },
+
+  // SELECT simple con filtros PostgREST
+  async select(tabla, params = '') {
+    const res = await fetch(`${SB_URL}/rest/v1/${tabla}?${params}&limit=200`, {
+      headers: this.headers
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(txt);
+    }
+    return res.json();
+  },
+
+  // INSERT
+  async insert(tabla, datos) {
+    const res = await fetch(`${SB_URL}/rest/v1/${tabla}`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify(datos)
+    });
+    if (!res.ok) {
+      const txt = await res.text();
+      throw new Error(txt);
+    }
+    return res.json();
+  },
+
+  // UPDATE
+  async update(tabla, filtro, datos) {
+    const res = await fetch(`${SB_URL}/rest/v1/${tabla}?${filtro}`, {
+      method: 'PATCH',
+      headers: this.headers,
+      body: JSON.stringify(datos)
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  // DELETE
+  async del(tabla, filtro) {
+    const res = await fetch(`${SB_URL}/rest/v1/${tabla}?${filtro}`, {
+      method: 'DELETE',
+      headers: this.headers
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return true;
+  },
+
+  // Consulta SQL via PostgREST RPC (requiere la función en Supabase)
+  // Como alternativa, usamos selects encadenados para simular JOINs
+  // y para la consola usamos el endpoint de SQL nativo si está disponible
+  async sql(query) {
+    // Intentar con el endpoint de SQL nativo de Supabase (si pg_api está habilitado)
+    const res = await fetch(`${SB_URL}/rest/v1/rpc/ejecutar_sql`, {
+      method: 'POST',
+      headers: this.headers,
+      body: JSON.stringify({ consulta: query })
+    });
+    if (!res.ok) {
+      // Fallback: intentar como query simple en la tabla mencionada
+      throw new Error(await res.text());
+    }
+    return res.json();
+  }
+};
+
+// ══════════════════════════════════════════════
+//  ROLES Y PERMISOS
+// ══════════════════════════════════════════════
+const PERMISOS = {
+  superadmin: { consola: true, escritura: true, delete: true, usuarios: true, consultas: true, tarot: true },
+  admin:      { consola: true, escritura: true, delete: false, usuarios: true, consultas: true, tarot: true },
+  consultor:  { consola: true, escritura: true, delete: false, usuarios: false, consultas: true, tarot: true },
+  usuario:    { consola: false, escritura: false, delete: false, usuarios: false, consultas: false, tarot: true }
+};
+
+// ══════════════════════════════════════════════
+//  USUARIOS DEL SISTEMA (almacenados en memoria / localStorage)
+// ══════════════════════════════════════════════
+const defaultUsers = [
+  { user: 'superadmin', pass: 'oracle2024', nombre: 'Super Administrador', rol: 'superadmin' },
+  { user: 'admin',      pass: 'admin123',   nombre: 'Administrador',       rol: 'admin'      },
+  { user: 'consultor1', pass: 'consult1',   nombre: 'Consultor Primero',   rol: 'consultor'  },
+  { user: 'usuario1',   pass: 'user1234',   nombre: 'Usuario Uno',         rol: 'usuario'    },
+];
+
+function getUsers() {
+  try {
+    const s = sessionStorage.getItem('tv_users');
+    return s ? JSON.parse(s) : [...defaultUsers];
+  } catch { return [...defaultUsers]; }
+}
+
+function saveUsers(arr) {
+  try { sessionStorage.setItem('tv_users', JSON.stringify(arr)); } catch {}
+}
+
+// Init
+if (!sessionStorage.getItem('tv_users')) saveUsers([...defaultUsers]);
+
+// ══════════════════════════════════════════════
+//  APP CONTROLLER
+// ══════════════════════════════════════════════
+const App = {
+  user: null,
+
+  login() {
+    const u  = document.getElementById('l-user').value.trim().toLowerCase();
+    const p  = document.getElementById('l-pass').value;
+    const r  = document.getElementById('l-role').value;
+    const err = document.getElementById('l-err');
+
+    const users = getUsers();
+    const found = users.find(x => x.user === u && x.pass === p && x.rol === r);
+
+    if (!found) { err.style.display = 'block'; return; }
+    err.style.display = 'none';
+    this.user = found;
+    this._show();
+  },
+
+  _show() {
+    document.getElementById('login-screen').style.display = 'none';
+    const app = document.getElementById('app');
+    app.style.display = 'flex';
+
+    // Navbar
+    document.getElementById('n-av').textContent   = this.user.nombre.slice(0, 2).toUpperCase();
+    document.getElementById('n-name').textContent = this.user.nombre;
+    document.getElementById('n-role').textContent = this.user.rol;
+    const chip = document.getElementById('n-chip');
+    chip.textContent = this.user.rol.toUpperCase();
+    chip.className   = `role-chip chip-${this.user.rol}`;
+
+    // Tabs según permisos
+    const p = PERMISOS[this.user.rol];
+    document.querySelector('.tab-sql').classList.toggle('hidden', !p.consola);
+    document.querySelector('.tab-mgr').classList.toggle('hidden', !p.usuarios);
+
+    // Consola
+    if (!p.consola) {
+      document.getElementById('pb').style.display = 'block';
+      document.getElementById('console-ui').style.display = 'none';
+    } else if (!p.escritura) {
+      document.getElementById('pw').style.display = 'block';
+    }
+
+    // Cargar queries, usuarios y cartas BD
+    Queries.render();
+    Users.render();
+    Tarot.cargarCartas(); // precarga silenciosa
+  },
+
+  logout() {
+    this.user = null;
+    document.getElementById('app').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'flex';
+    ['l-user','l-pass'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('l-role').value = '';
+  },
+
+  tab(i, btn) {
+    document.querySelectorAll('.tab-panel').forEach((p, j) => p.classList.toggle('active', j === i));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+};
+
+// ══════════════════════════════════════════════
+//  ARCANOS MAYORES — SVG inline
+// ══════════════════════════════════════════════
+const ARCANA = [
+  { num:'0',   nombre:'El Loco',        sym:'🃏', color:'#a78bfa', energia:'dual',     sig:'Inicio, libertad e ingenuidad ante lo desconocido.' },
+  { num:'I',   nombre:'El Mago',        sym:'🎩', color:'#f59e0b', energia:'positiva', sig:'Voluntad, habilidad y poder de manifestar sueños.' },
+  { num:'II',  nombre:'La Sacerdotisa', sym:'🌙', color:'#818cf8', energia:'neutral',  sig:'Intuición, misterio y sabiduría del inconsciente.' },
+  { num:'III', nombre:'La Emperatriz',  sym:'🌸', color:'#fb7185', energia:'positiva', sig:'Fertilidad, abundancia, creatividad y naturaleza.' },
+  { num:'IV',  nombre:'El Emperador',   sym:'👑', color:'#f59e0b', energia:'positiva', sig:'Autoridad, estructura, poder y liderazgo firme.' },
+  { num:'V',   nombre:'El Hierofante',  sym:'⛪', color:'#c084fc', energia:'neutral',  sig:'Tradición, espiritualidad y enseñanza sagrada.' },
+  { num:'VI',  nombre:'Los Amantes',    sym:'💞', color:'#f43f5e', energia:'positiva', sig:'Amor, elección, armonía y conexión del alma.' },
+  { num:'VII', nombre:'El Carro',       sym:'🏆', color:'#34d399', energia:'positiva', sig:'Victoria, determinación, control y avance.' },
+  { num:'VIII',nombre:'La Fuerza',      sym:'🦁', color:'#fb923c', energia:'positiva', sig:'Coraje, paciencia, dominio del instinto interior.' },
+  { num:'IX',  nombre:'El Ermitaño',    sym:'🕯️', color:'#94a3b8', energia:'neutral',  sig:'Soledad, sabiduría interior y búsqueda profunda.' },
+  { num:'X',   nombre:'La Rueda',       sym:'☸️', color:'#fbbf24', energia:'dual',     sig:'Ciclos, destino, cambio y fortuna giratoria.' },
+  { num:'XI',  nombre:'La Justicia',    sym:'⚖️', color:'#60a5fa', energia:'neutral',  sig:'Equilibrio, verdad, karma y consecuencias.' },
+  { num:'XII', nombre:'El Colgado',     sym:'🙃', color:'#a78bfa', energia:'dual',     sig:'Sacrificio, suspenso, perspectiva nueva y espera.' },
+  { num:'XIII',nombre:'La Muerte',      sym:'💀', color:'#475569', energia:'dual',     sig:'Transformación profunda y fin de una etapa.' },
+  { num:'XIV', nombre:'La Templanza',   sym:'🌊', color:'#06b6d4', energia:'positiva', sig:'Moderación, paciencia, armonía y fluir.' },
+  { num:'XV',  nombre:'El Diablo',      sym:'😈', color:'#f87171', energia:'negativa', sig:'Apego, tentación, materialismo y sombra.' },
+  { num:'XVI', nombre:'La Torre',       sym:'⚡', color:'#ef4444', energia:'negativa', sig:'Cambio abrupto, caos, revelación y derrumbe.' },
+  { num:'XVII',nombre:'La Estrella',    sym:'⭐', color:'#93c5fd', energia:'positiva', sig:'Esperanza, renovación, inspiración y fe.' },
+  { num:'XVIII',nombre:'La Luna',       sym:'🌑', color:'#6366f1', energia:'dual',     sig:'Ilusión, miedos, sueños y el inconsciente.' },
+  { num:'XIX', nombre:'El Sol',         sym:'☀️', color:'#fbbf24', energia:'positiva', sig:'Alegría, éxito, claridad y luz total.' },
+  { num:'XX',  nombre:'El Juicio',      sym:'📯', color:'#a3e635', energia:'dual',     sig:'Despertar, redención y llamado del alma.' },
+  { num:'XXI', nombre:'El Mundo',       sym:'🌍', color:'#10b981', energia:'positiva', sig:'Culminación, realización y cierre de ciclos.' },
+];
+
+function arcanaCardSVG(arcana, size=70) {
+  const s = size;
+  return `<svg width="${s}" height="${s}" viewBox="0 0 70 70" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="cg${arcana.num}" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="${arcana.color}" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#0d0824" stop-opacity="0.9"/>
+      </radialGradient>
+    </defs>
+    <rect width="70" height="70" rx="10" fill="url(#cg${arcana.num})" stroke="${arcana.color}" stroke-width="1" stroke-opacity="0.5"/>
+    <!-- Border decoration -->
+    <rect x="4" y="4" width="62" height="62" rx="7" fill="none" stroke="${arcana.color}" stroke-width="0.5" stroke-opacity="0.3" stroke-dasharray="3,2"/>
+    <!-- Symbol -->
+    <text x="35" y="38" text-anchor="middle" font-size="24" fill="${arcana.color}" opacity="0.9">${arcana.sym}</text>
+    <!-- Roman numeral -->
+    <text x="35" y="60" text-anchor="middle" font-size="7" fill="${arcana.color}" opacity="0.6" font-family="Cinzel, serif">${arcana.num}</text>
+    <!-- Stars at corners -->
+    <text x="10" y="14" font-size="5" fill="${arcana.color}" opacity="0.4">✦</text>
+    <text x="58" y="14" font-size="5" fill="${arcana.color}" opacity="0.4" text-anchor="middle">✦</text>
+  </svg>`;
+}
+
+// ══════════════════════════════════════════════
+//  TAROT ENGINE — conectado a BD
+// ══════════════════════════════════════════════
+const Tarot = {
+  posiciones: ['Pasado', 'Presente', 'Futuro'],
+  cartasBD: [],      // cartas cargadas desde Supabase
+  cargando: false,
+
+  // ── Carga las cartas reales desde la BD al iniciar ──
+  async cargarCartas() {
+    if (this.cartasBD.length > 0) return; // ya cargadas
+    if (this.cargando) return;
+    this.cargando = true;
+    try {
+      const data = await DB.select('CARTA', 'select=id_carta,nombre,tipo,numero,descripcion_imagen,CATEGORIA(elemento,descripcion)&order=numero.asc');
+      if (data && data.length > 0) {
+        this.cartasBD = data;
+        console.log(`✓ ${data.length} cartas cargadas desde la BD`);
+      }
+    } catch(e) {
+      console.warn('No se pudieron cargar cartas de la BD, usando cartas locales.', e);
+    }
+    this.cargando = false;
+  },
+
+  // ── Mezcla y retorna 3 cartas (BD o locales como respaldo) ──
+  _seleccionar3() {
+    if (this.cartasBD.length >= 3) {
+      // Usar cartas reales de la BD
+      const mezcladas = [...this.cartasBD].sort(() => Math.random() - 0.5);
+      return mezcladas.slice(0, 3).map(c => ({
+        // Campos BD
+        id:          c.id_carta,
+        nombre:      c.nombre || '—',
+        tipo:        c.tipo   || '—',
+        numero:      c.numero,
+        descripcion: c.descripcion_imagen || '',
+        categoria:   c.CATEGORIA ? c.CATEGORIA.elemento  : '—',
+        catDesc:     c.CATEGORIA ? c.CATEGORIA.descripcion : '',
+        // Campos visuales (mapeados desde ARCANA local por número si existe)
+        _arcana:     ARCANA.find(a => parseInt(a.num === '0' ? '0' : a.num) === c.numero) || ARCANA[c.numero % ARCANA.length] || ARCANA[0],
+        fuenteBD:    true
+      }));
+    }
+    // Respaldo: cartas locales
+    return [...ARCANA].sort(() => Math.random() - 0.5).slice(0, 3).map(a => ({
+      id: null, nombre: a.nombre, tipo: 'mayor', numero: parseInt(a.num)||0,
+      descripcion: a.sig, categoria: 'arcano', catDesc: '',
+      _arcana: a, fuenteBD: false
+    }));
+  },
+
+  async leer() {
+    const q = document.getElementById('t-q').value.trim();
+    if (!q) { alert('Escribe tu pregunta antes de revelar los arcanos.'); return; }
+
+    // Mostrar loading en el botón
+    const btn = document.querySelector('.btn-reveal');
+    btn.textContent = '⏳ Consultando el oráculo...';
+    btn.disabled = true;
+
+    // Cargar cartas de BD si no están cargadas
+    await this.cargarCartas();
+
+    const sel = this._seleccionar3();
+    this._cards(sel);
+    this._reading(q, sel);
+
+    btn.textContent = '✨ Revelar los Arcanos';
+    btn.disabled = false;
+  },
+
+  _cards(sel) {
+    const row = document.getElementById('cards-row');
+    row.innerHTML = sel.map((c, i) => {
+      const arcana = c._arcana || ARCANA[0];
+      const svgEl  = arcanaCardSVG(arcana, 80);
+      const badgeBD = c.fuenteBD
+        ? `<span style="font-size:0.58rem;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);color:#34d399;padding:1px 6px;border-radius:10px;letter-spacing:1px">BD</span>`
+        : '';
+      return `
+      <div class="arcana-card" style="animation: float ${3+i*0.5}s ease-in-out infinite ${i*0.3}s">
+        <div style="margin-bottom:0.6rem">${svgEl}</div>
+        <div class="card-position">${this.posiciones[i]}</div>
+        <div class="card-arcana-name">${c.nombre} ${badgeBD}</div>
+        <div class="card-arcana-num" style="margin-bottom:0.3rem">
+          ${c.tipo ? `Tipo: ${c.tipo}` : ''} ${c.numero !== undefined ? `· Nº ${c.numero}` : ''}
+        </div>
+        ${c.categoria !== '—' ? `<div class="card-arcana-energy">Elemento: ${c.categoria}</div>` : ''}
+        ${c.descripcion ? `<div style="font-family:'IM Fell English',serif;font-style:italic;font-size:0.72rem;color:rgba(196,181,253,0.55);margin-top:0.5rem;line-height:1.4">${c.descripcion}</div>` : ''}
+      </div>`;
+    }).join('');
+  },
+
+  _reading(q, sel) {
+    // ── Determinar tono general de la tirada ──
+    const tipos = sel.map(c => c.tipo ? c.tipo.toLowerCase() : 'mayor');
+    const hayMayor  = tipos.some(t => t.includes('mayor'));
+    const todoMayor = tipos.every(t => t.includes('mayor'));
+
+    // ── Energía de cada carta (desde ARCANA local si existe, sino inferida) ──
+    const energia = sel.map(c => {
+      if (c._arcana) return c._arcana.energia;
+      // Inferir por tipo
+      if (c.tipo && c.tipo.toLowerCase().includes('mayor')) return 'dual';
+      return 'neutral';
+    });
+
+    const positivas = energia.filter(e => e === 'positiva').length;
+    const negativas = energia.filter(e => e === 'negativa').length;
+
+    // ── Conclusión general ──
+    let tono, concl;
+    if (positivas >= 2) {
+      tono  = 'favorable';
+      concl = 'Las energías que rodean tu pregunta son predominantemente luminosas. El camino se abre con posibilidades reales.';
+    } else if (negativas >= 2) {
+      tono  = 'de advertencia';
+      concl = 'Las cartas advierten sobre obstáculos presentes. Este es un momento para detenerse, observar y actuar con cautela.';
+    } else {
+      tono  = 'de equilibrio';
+      concl = 'La tirada muestra un momento de transición y equilibrio. Ni el bloqueo ni el avance son absolutos — la decisión está en tus manos.';
+    }
+
+    if (todoMayor) concl += ' La presencia de tres Arcanos Mayores señala que esta situación tiene un peso kármico significativo en tu vida.';
+    else if (hayMayor) concl += ' La mezcla de arcanos sugiere que hay tanto fuerzas del destino como decisiones cotidianas en juego.';
+
+    // ── Construcción del texto completo ──
+    const frase = {
+      positiva: 'trae energías de apertura y avance',
+      negativa: 'advierte sobre bloqueos o sombras',
+      neutral:  'invita a la reflexión y al discernimiento',
+      dual:     'presenta un cruce de caminos con doble posibilidad'
+    };
+
+    const bloques = sel.map((c, i) => {
+      const pos   = this.posiciones[i];
+      const ener  = energia[i];
+      const desc  = c.descripcion || (c._arcana ? c._arcana.sig : '');
+      const catTx = (c.categoria && c.categoria !== '—') ? ` Pertenece al elemento ${c.categoria}.` : '';
+      const catDe = c.catDesc ? ` ${c.catDesc}` : '';
+
+      // Contexto según posición
+      const contexto = {
+        'Pasado':   'Lo que ha moldeado tu situación actual:',
+        'Presente': 'Lo que define el momento que vives ahora:',
+        'Futuro':   'Lo que el oráculo vislumbra en tu horizonte:'
+      }[pos];
+
+      return [
+        `✦ ${pos.toUpperCase()} — ${c.nombre}`,
+        `${contexto}`,
+        `${c.nombre} ${frase[ener]}. ${desc}${catTx}${catDe}`,
+      ].join('\n');
+    });
+
+    // ── Consejo final personalizado según pregunta ──
+    const qLow = q.toLowerCase();
+    let consejo = '';
+    if (qLow.match(/amor|pareja|relaci[oó]n|coraz[oó]n|sentimiento/)) {
+      consejo = 'En el plano del amor, estas cartas sugieren que la claridad interior es la llave antes de buscar conexión exterior.';
+    } else if (qLow.match(/trabajo|dinero|negocio|carrera|empleo|financ/)) {
+      consejo = 'En el plano material, el oráculo señala que la constancia y la honestidad serán tus mejores aliados.';
+    } else if (qLow.match(/salud|cuerpo|enferme|bienestar/)) {
+      consejo = 'En el plano de la salud, las cartas recuerdan que el cuerpo habla lo que la mente calla. Escucha sus señales.';
+    } else if (qLow.match(/familia|hijo|madre|padre|hermano/)) {
+      consejo = 'En el plano familiar, el oráculo pide paciencia y comunicación honesta antes de tomar decisiones.';
+    } else {
+      consejo = 'El oráculo no dicta el destino; ilumina el camino que ya existe dentro de ti. La elección siempre es tuya.';
+    }
+
+    const texto = [
+      `✧ Lectura para: "${q}"`,
+      `Energía general de la tirada: ${tono.toUpperCase()}`,
+      '',
+      ...bloques.map((b, i) => (i < bloques.length - 1 ? b + '\n' : b)),
+      '',
+      `─── CONCLUSIÓN DEL ORÁCULO ───`,
+      concl,
+      '',
+      `☽ Consejo: ${consejo}`
+    ].join('\n');
+
+    document.getElementById('reading-txt').textContent = texto;
+    document.getElementById('reading-box').style.display = 'block';
+    document.getElementById('reading-box').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+};
+
+// ══════════════════════════════════════════════
+//  20 CONSULTAS JOIN — usando PostgREST embed
+// ══════════════════════════════════════════════
+const QUERIES = [
+  {
+    titulo: '1. Videntes con sus Sesiones',
+    desc:   'Vidente + fecha, hora y pregunta de cada sesión',
+    tabla:  'SESION',
+    params: 'select=id_sesion,fecha,hora_inicio,hora_final,pregunta,numero_preguntas,VIDENTE(nombre,apellido,especialidad,tarifa)',
+  },
+  {
+    titulo: '2. Consultantes con sus Sesiones',
+    desc:   'Consultante + sesiones que ha tenido con su pregunta',
+    tabla:  'SESION',
+    params: 'select=id_sesion,fecha,hora_inicio,hora_final,pregunta,CONSULTANTE(nombre,apellido,correo,telefono)',
+  },
+  {
+    titulo: '3. Sesiones con Vidente y Consultante',
+    desc:   'Vista completa: sesión + vidente + consultante',
+    tabla:  'SESION',
+    params: 'select=id_sesion,fecha,hora_inicio,hora_final,pregunta,numero_preguntas,VIDENTE(nombre,apellido,especialidad),CONSULTANTE(nombre,apellido,correo)',
+  },
+  {
+    titulo: '4. Sesiones con su Tirada y Carta',
+    desc:   'Sesión + tirada usada + carta asociada',
+    tabla:  'SESION',
+    params: 'select=id_sesion,fecha,pregunta,TIRADA(nombre,proposito,descripcion,num_cartas,CARTA(nombre,tipo,numero))',
+  },
+  {
+    titulo: '5. Facturas con datos de Sesión',
+    desc:   'Factura + sesión vinculada + vidente + consultante',
+    tabla:  'FACTURA',
+    params: 'select=id_factura,num_factura,fecha_emision,subtotal,iva,total,estado,SESION(fecha,pregunta,VIDENTE(nombre,apellido),CONSULTANTE(nombre,apellido))',
+  },
+  {
+    titulo: '6. Pagos con su Factura y Sesión',
+    desc:   'Pago + factura + sesión asociada',
+    tabla:  'PAGO',
+    params: 'select=id_pago,monto,metodo_pago,fecha_pago,estado,referencia_transaccional,FACTURA(num_factura,subtotal,iva,total,estado,SESION(fecha,VIDENTE(nombre),CONSULTANTE(nombre,apellido)))',
+  },
+  {
+    titulo: '7. Reseñas con Consultante y Sesión',
+    desc:   'Reseña + quién la escribió + sesión calificada',
+    tabla:  'RESENIA',
+    params: 'select=id_resenia,clasificacion,comentario,fecha,respuesta_vidente,CONSULTANTE(nombre,apellido,correo),SESION(fecha,pregunta,VIDENTE(nombre,apellido,especialidad))',
+  },
+  {
+    titulo: '8. Chat con Sesión y Consultante',
+    desc:   'Mensajes del chat + sesión relacionada + consultante',
+    tabla:  'CHAT_SESION',
+    params: 'select=id_chat,fecha,mensaje,leido,SESION(fecha,pregunta,VIDENTE(nombre),CONSULTANTE(nombre,apellido))',
+  },
+  {
+    titulo: '9. Cartas con su Categoría',
+    desc:   'Carta + elemento y descripción de su categoría',
+    tabla:  'CARTA',
+    params: 'select=id_carta,nombre,tipo,numero,descripcion_imagen,CATEGORIA(elemento,descripcion)',
+  },
+  {
+    titulo: '10. Tiradas con su Carta',
+    desc:   'Cada tirada con la carta que le corresponde',
+    tabla:  'TIRADA',
+    params: 'select=id_tirada,nombre,proposito,descripcion,num_cartas,posicion,CARTA(nombre,tipo,numero,CATEGORIA(elemento))',
+  },
+  {
+    titulo: '11. Consultantes con su Signo Zodiacal',
+    desc:   'Consultante + nombre y descripción de su signo',
+    tabla:  'CONSULTANTE',
+    params: 'select=id_consultante,nombre,apellido,correo,fecha_nacimiento,fecha_ingreso,SIGNO_ZODIACAL(nombre,descripcion)',
+  },
+  {
+    titulo: '12. Videntes Disponibles',
+    desc:   'Solo videntes con disponible=true y sus datos',
+    tabla:  'VIDENTE',
+    params: 'select=id_vidente,nombre,apellido,correo,especialidad,tarifa&disponible=is.true',
+  },
+  {
+    titulo: '13. Facturas Pagadas con Pago',
+    desc:   'Facturas en estado true + su pago registrado',
+    tabla:  'FACTURA',
+    params: 'select=id_factura,num_factura,total,fecha_emision,PAGO(monto,metodo_pago,fecha_pago,referencia_transaccional)&estado=is.true',
+  },
+  {
+    titulo: '14. Facturas Sin Pagar con Sesión',
+    desc:   'Facturas pendientes + sesión + consultante',
+    tabla:  'FACTURA',
+    params: 'select=id_factura,num_factura,subtotal,iva,total,SESION(fecha,VIDENTE(nombre),CONSULTANTE(nombre,apellido))&estado=is.false',
+  },
+  {
+    titulo: '15. Reseñas con Calificación Máxima (5⭐)',
+    desc:   'Las mejores reseñas con consultante y sesión',
+    tabla:  'RESENIA',
+    params: 'select=id_resenia,clasificacion,comentario,fecha,respuesta_vidente,CONSULTANTE(nombre,apellido),SESION(fecha,VIDENTE(nombre,especialidad))&clasificacion=eq.5',
+  },
+  {
+    titulo: '16. Reseñas Calificación Baja (1-2⭐)',
+    desc:   'Reseñas negativas con consultante y sesión',
+    tabla:  'RESENIA',
+    params: 'select=id_resenia,clasificacion,comentario,fecha,CONSULTANTE(nombre,apellido),SESION(fecha,VIDENTE(nombre,especialidad))&clasificacion=lte.2',
+  },
+  {
+    titulo: '17. Chat No Leído con Sesión',
+    desc:   'Mensajes sin leer y su sesión asociada',
+    tabla:  'CHAT_SESION',
+    params: 'select=id_chat,fecha,mensaje,SESION(fecha,pregunta,VIDENTE(nombre),CONSULTANTE(nombre,apellido))&leido=is.false',
+  },
+  {
+    titulo: '18. Chat Leído con Sesión',
+    desc:   'Mensajes ya leídos y su sesión asociada',
+    tabla:  'CHAT_SESION',
+    params: 'select=id_chat,fecha,mensaje,SESION(fecha,pregunta,VIDENTE(nombre),CONSULTANTE(nombre,apellido))&leido=is.true',
+  },
+  {
+    titulo: '19. Pagos Pendientes con Factura',
+    desc:   'Pagos no completados + factura + sesión',
+    tabla:  'PAGO',
+    params: 'select=id_pago,monto,metodo_pago,fecha_pago,FACTURA(num_factura,total,SESION(fecha,VIDENTE(nombre),CONSULTANTE(nombre,apellido)))&estado=is.false',
+  },
+  {
+    titulo: '20. Sesiones con Tirada, Consultante y Vidente',
+    desc:   'Vista 360°: sesión completa con todos sus datos',
+    tabla:  'SESION',
+    params: 'select=id_sesion,fecha,hora_inicio,hora_final,pregunta,numero_preguntas,VIDENTE(nombre,apellido,especialidad,tarifa),CONSULTANTE(nombre,apellido,correo,SIGNO_ZODIACAL(nombre)),TIRADA(nombre,proposito,CARTA(nombre,tipo))',
+  },
+];
+
+const Queries = {
+  render() {
+    const p = PERMISOS[App.user.rol];
+    if (!p.consultas) {
+      document.getElementById('qgrid').innerHTML = '<p class="empty-msg">Tu rol no tiene acceso a las consultas predeterminadas.</p>';
+      return;
+    }
+    document.getElementById('qgrid').innerHTML = QUERIES.map((q, i) => `
+      <div class="qcard" onclick="Queries.run(${i})">
+        <div class="qcard-num">#${String(i+1).padStart(2,'0')}</div>
+        <div class="qcard-title">${q.titulo}</div>
+        <div class="qcard-desc">${q.desc}</div>
+      </div>
+    `).join('');
+  },
+
+  async run(i) {
+    const q = QUERIES[i];
+    const res = document.getElementById('qresult');
+    const tit = document.getElementById('qrtitle');
+    const bod = document.getElementById('qrbody');
+
+    tit.textContent = q.titulo;
+    bod.innerHTML   = `<span class="out-info">Consultando... <span class="spinner"></span></span>`;
+    res.style.display = 'block';
+    res.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    try {
+      const data = await DB.select(q.tabla, q.params);
+      bod.innerHTML = this._table(data);
+    } catch(e) {
+      bod.innerHTML = `<span style="color:#f87171;font-family:'IM Fell English',serif;font-style:italic">⚠ Error: ${e.message}</span>`;
+    }
+  },
+
+  _table(data) {
+    if (!data || data.length === 0) return '<p class="empty-msg">Sin resultados para esta consulta.</p>';
+
+    // Aplanar objetos anidados (JOINs)
+    const flat = data.map(row => this._flatten(row));
+    const cols  = Object.keys(flat[0]);
+
+    return `<div class="tbl-wrap"><table>
+      <thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+      <tbody>${flat.map(r => `<tr>${cols.map(c => `<td>${r[c] ?? '—'}</td>`).join('')}</tr>`).join('')}</tbody>
+    </table></div>
+    <p style="color:rgba(196,181,253,0.4);font-size:0.72rem;margin-top:0.6rem;font-family:'IM Fell English',serif;font-style:italic">${data.length} registro(s) encontrado(s)</p>`;
+  },
+
+  _flatten(obj, prefix='') {
+    const res = {};
+    for (const [k, v] of Object.entries(obj)) {
+      const key = prefix ? `${prefix}.${k}` : k;
+      if (v !== null && typeof v === 'object' && !Array.isArray(v)) {
+        Object.assign(res, this._flatten(v, key));
+      } else if (Array.isArray(v)) {
+        // Para arrays (relaciones 1-N) mostrar conteo y primer elemento
+        res[`${key}[n]`] = v.length;
+        if (v.length > 0 && typeof v[0] === 'object') {
+          Object.assign(res, this._flatten(v[0], `${key}[0]`));
+        }
+      } else {
+        res[key] = v;
+      }
+    }
+    return res;
+  }
+};
+
+// ══════════════════════════════════════════════
+//  SQL CONSOLE
+// ══════════════════════════════════════════════
+const SQL = {
+  async run() {
+    if (!App.user) return;
+    const sql = document.getElementById('sql-in').value.trim();
+    const out  = document.getElementById('cout');
+
+    if (!sql) { out.innerHTML = '<span class="out-info">-- Escribe una consulta primero.</span>'; return; }
+
+    const p = PERMISOS[App.user.rol];
+    const esEscritura = /^\s*(INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|TRUNCATE)/i.test(sql);
+
+    if (!p.consola) { out.innerHTML = '<span class="out-err">❌ Sin acceso a la consola.</span>'; return; }
+    if (!p.escritura && esEscritura) { out.innerHTML = '<span class="out-err">❌ Tu rol solo permite SELECT.</span>'; return; }
+    if (!p.delete && /^\s*DELETE/i.test(sql)) { out.innerHTML = '<span class="out-err">❌ Tu rol no puede ejecutar DELETE.</span>'; return; }
+
+    out.innerHTML = '<span class="out-info">⏳ Ejecutando consulta...</span>';
+
+    // Detectar tabla y parámetros del SELECT para usar la REST API
+    try {
+      const result = await this._ejecutar(sql);
+      if (Array.isArray(result) && result.length > 0) {
+        const flat   = result.map(r => Queries._flatten(r));
+        const cols   = Object.keys(flat[0]);
+        const header = cols.map(c => c.substring(0,18).padEnd(18)).join(' | ');
+        const sep    = '─'.repeat(header.length);
+        const rows   = flat.map(r => cols.map(c => String(r[c] ?? 'NULL').substring(0,18).padEnd(18)).join(' | ')).join('\n');
+        out.textContent = `${header}\n${sep}\n${rows}\n\n✓ ${result.length} fila(s) retornada(s)`;
+      } else if (Array.isArray(result) && result.length === 0) {
+        out.innerHTML = '<span class="out-ok">✅ Consulta ejecutada. Sin filas retornadas.</span>';
+      } else {
+        out.textContent = JSON.stringify(result, null, 2);
+      }
+    } catch(e) {
+      // Si falla RPC, intentar parsear SQL manualmente
+      try {
+        const r2 = await this._parsearSQL(sql);
+        if (Array.isArray(r2) && r2.length > 0) {
+          const flat   = r2.map(r => Queries._flatten(r));
+          const cols   = Object.keys(flat[0]);
+          const header = cols.map(c => c.substring(0,18).padEnd(18)).join(' | ');
+          const sep    = '─'.repeat(header.length);
+          const rows   = flat.map(r => cols.map(c => String(r[c]??'NULL').substring(0,18).padEnd(18)).join(' | ')).join('\n');
+          out.textContent = `${header}\n${sep}\n${rows}\n\n✓ ${r2.length} fila(s)`;
+        } else {
+          out.innerHTML = '<span class="out-ok">✅ Sin filas retornadas.</span>';
+        }
+      } catch(e2) {
+        out.innerHTML = `<span class="out-err">❌ Error: ${e2.message}\n\n<span class="out-info">Nota: La consola usa la REST API de Supabase.\nAsegúrate de que las tablas existan y uses sintaxis válida.</span></span>`;
+      }
+    }
+  },
+
+  async _ejecutar(sql) {
+    // Intentar RPC primero
+    const res = await fetch(`${SB_URL}/rest/v1/rpc/ejecutar_sql`, {
+      method: 'POST',
+      headers: { ...DB.headers },
+      body: JSON.stringify({ consulta: sql })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    return res.json();
+  },
+
+  async _parsearSQL(sql) {
+    // Parser básico para SELECT ... FROM tabla [WHERE ...] [LIMIT n]
+    const clean = sql.replace(/;/g,'').trim();
+
+    // Detectar tabla principal
+    const fromMatch = clean.match(/\bFROM\s+(\w+)/i);
+    if (!fromMatch) throw new Error('No se pudo identificar la tabla. Usa SELECT * FROM tabla.');
+
+    const tabla = fromMatch[1];
+
+    // WHERE
+    const whereMatch = clean.match(/\bWHERE\s+(.+?)(?:\s+(?:ORDER|GROUP|LIMIT|$))/i);
+    let filtros = 'limit=200';
+
+    if (whereMatch) {
+      const cond = whereMatch[1].trim();
+      // Soportar condiciones básicas: col = val, col <= val, col >= val
+      const lte = cond.match(/(\w+)\s*<=\s*'?([^'\s]+)'?/i);
+      const gte = cond.match(/(\w+)\s*>=\s*'?([^'\s]+)'?/i);
+      const eq  = cond.match(/(\w+)\s*=\s*'?([^'\s;']+)'?/i);
+      const neq = cond.match(/(\w+)\s*!=\s*'?([^'\s;']+)'?/i);
+      const isT = cond.match(/(\w+)\s+IS\s+(TRUE|FALSE|NULL)/i);
+
+      if (lte) filtros = `${lte[1]}=lte.${lte[2]}&limit=200`;
+      else if (gte) filtros = `${gte[1]}=gte.${gte[2]}&limit=200`;
+      else if (isT) {
+        const bval = isT[2].toLowerCase();
+        filtros = `${isT[1]}=is.${bval}&limit=200`;
+      } else if (eq) {
+        const raw = eq[2];
+        filtros = (raw==='true'||raw==='false') ? `${eq[1]}=is.${raw}&limit=200` : `${eq[1]}=eq.${raw}&limit=200`;
+      } else if (neq) filtros = `${neq[1]}=neq.${neq[2]}&limit=200`;
+    }
+
+    // LIMIT
+    const limMatch = clean.match(/\bLIMIT\s+(\d+)/i);
+    if (limMatch) filtros = filtros.replace(/limit=\d+/, `limit=${limMatch[1]}`);
+
+    // SELECT columns
+    const selMatch = clean.match(/^SELECT\s+(.+?)\s+FROM/i);
+    const cols = selMatch ? selMatch[1].trim() : '*';
+    if (cols !== '*') filtros = `select=${cols.replace(/\s+/g,'')}&${filtros}`;
+
+    return DB.select(tabla, filtros);
+  },
+
+  clear() {
+    document.getElementById('sql-in').value = '';
+    document.getElementById('cout').innerHTML = '<span class="out-info">-- Consola limpiada. Lista para nueva consulta.</span>';
+  }
+};
+
+// ══════════════════════════════════════════════
+//  GESTIÓN DE USUARIOS
+// ══════════════════════════════════════════════
+const Users = {
+  render() {
+    const p   = PERMISOS[App.user.rol];
+    const form = document.getElementById('create-form');
+    form.style.display = p.usuarios ? 'block' : 'none';
+
+    const list  = document.getElementById('ulist');
+    const users = getUsers();
+    const canDel = PERMISOS[App.user.rol].delete;
+
+    list.innerHTML = users.map((u, i) => `
+      <div class="user-item">
+        <div class="user-item-info">
+          <div class="user-item-av">${u.nombre.slice(0,2).toUpperCase()}</div>
+          <div>
+            <div class="user-item-name">${u.nombre}</div>
+            <div class="user-item-role">@${u.user} · ${u.rol}</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;align-items:center">
+          <span class="role-chip chip-${u.rol}">${u.rol.toUpperCase()}</span>
+          ${canDel && u.rol !== 'superadmin' ? `<button class="btn-del" onclick="Users.eliminar(${i})">✕ Eliminar</button>` : ''}
+        </div>
+      </div>
+    `).join('') || '<p class="empty-msg">No hay usuarios registrados.</p>';
+  },
+
+  crear() {
+    const user = document.getElementById('nu-user').value.trim().toLowerCase();
+    const pass = document.getElementById('nu-pass').value;
+    const name = document.getElementById('nu-name').value.trim();
+    const rol  = document.getElementById('nu-role').value;
+    const msg  = document.getElementById('nu-msg');
+
+    if (!user || !pass || !name || !rol) {
+      msg.textContent = '⚠ Completa todos los campos.';
+      msg.className = 'form-msg err'; msg.style.display = 'block';
+      return;
+    }
+
+    const users = getUsers();
+    if (users.find(u => u.user === user)) {
+      msg.textContent = '⚠ Ese nombre de usuario ya existe.';
+      msg.className = 'form-msg err'; msg.style.display = 'block';
+      return;
+    }
+
+    users.push({ user, pass, nombre: name, rol });
+    saveUsers(users);
+
+    msg.textContent = `✓ Usuario "${name}" creado exitosamente.`;
+    msg.className = 'form-msg ok'; msg.style.display = 'block';
+    ['nu-user','nu-pass','nu-name'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('nu-role').value = '';
+
+    this.render();
+    setTimeout(() => { msg.style.display = 'none'; }, 3000);
+  },
+
+  eliminar(i) {
+    if (!confirm('¿Eliminar este usuario?')) return;
+    const users = getUsers();
+    users.splice(i, 1);
+    saveUsers(users);
+    this.render();
+  }
+};
+
+// ══════════════════════════════════════════════
+//  ENTER en login
+// ══════════════════════════════════════════════
+document.getElementById('l-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') App.login();
+});
+</script>
+</body>
+</html>
