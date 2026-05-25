@@ -1466,8 +1466,8 @@ const QUERIES = [
     titulo: '1. Sesiones por Vidente (GROUP BY)',
     desc:   'Cuántas sesiones ha tenido cada vidente',
     sql: `SELECT v.nombre, v.apellido, v.especialidad, COUNT(s.id_sesion) AS total_sesiones
-FROM "VIDENTE" v
-LEFT JOIN "SESION" s ON v.id_vidente = s.id_vidente
+FROM VIDENTE v
+LEFT JOIN SESION s ON v.id_vidente = s.id_vidente
 GROUP BY v.id_vidente, v.nombre, v.apellido, v.especialidad
 ORDER BY total_sesiones DESC`
   },
@@ -1476,8 +1476,8 @@ ORDER BY total_sesiones DESC`
     titulo: '2. Videntes con más de 1 Sesión (HAVING)',
     desc:   'Videntes que han tenido más de una sesión',
     sql: `SELECT v.nombre, v.apellido, v.especialidad, COUNT(s.id_sesion) AS total_sesiones
-FROM "VIDENTE" v
-JOIN "SESION" s ON v.id_vidente = s.id_vidente
+FROM VIDENTE v
+JOIN SESION s ON v.id_vidente = s.id_vidente
 GROUP BY v.id_vidente, v.nombre, v.apellido, v.especialidad
 HAVING COUNT(s.id_sesion) > 1
 ORDER BY total_sesiones DESC`
@@ -1489,9 +1489,9 @@ ORDER BY total_sesiones DESC`
     sql: `SELECT v.nombre, v.apellido, v.especialidad,
        ROUND(AVG(r.clasificacion)::numeric, 2) AS promedio_calificacion,
        COUNT(r.id_resenia) AS total_resenas
-FROM "VIDENTE" v
-JOIN "SESION" s   ON v.id_vidente = s.id_vidente
-JOIN "RESENIA" r  ON s.id_sesion  = r.id_sesion
+FROM VIDENTE v
+JOIN SESION s   ON v.id_vidente = s.id_vidente
+JOIN RESENIA r  ON s.id_sesion  = r.id_sesion
 GROUP BY v.id_vidente, v.nombre, v.apellido, v.especialidad
 ORDER BY promedio_calificacion DESC`
   },
@@ -1502,9 +1502,9 @@ ORDER BY promedio_calificacion DESC`
     sql: `SELECT v.nombre, v.apellido,
        ROUND(AVG(r.clasificacion)::numeric,2) AS promedio,
        COUNT(r.id_resenia) AS total_resenas
-FROM "VIDENTE" v
-JOIN "SESION" s  ON v.id_vidente = s.id_vidente
-JOIN "RESENIA" r ON s.id_sesion  = r.id_sesion
+FROM VIDENTE v
+JOIN SESION s  ON v.id_vidente = s.id_vidente
+JOIN RESENIA r ON s.id_sesion  = r.id_sesion
 GROUP BY v.id_vidente, v.nombre, v.apellido
 HAVING AVG(r.clasificacion) >= 4
 ORDER BY promedio DESC`
@@ -1516,9 +1516,9 @@ ORDER BY promedio DESC`
     sql: `SELECT v.nombre, v.apellido, v.especialidad,
        COUNT(f.id_factura)  AS total_facturas,
        SUM(f.total)         AS ingresos_totales
-FROM "VIDENTE" v
-JOIN "SESION"  s ON v.id_vidente = s.id_vidente
-JOIN "FACTURA" f ON s.id_sesion  = f.id_sesion
+FROM VIDENTE v
+JOIN SESION  s ON v.id_vidente = s.id_vidente
+JOIN FACTURA f ON s.id_sesion  = f.id_sesion
 WHERE f.estado = true
 GROUP BY v.id_vidente, v.nombre, v.apellido, v.especialidad
 ORDER BY ingresos_totales DESC`
@@ -1530,9 +1530,9 @@ ORDER BY ingresos_totales DESC`
     sql: `SELECT s.id_sesion, s.fecha, s.hora_inicio, s.hora_final, s.pregunta,
        v.nombre AS vidente, v.especialidad,
        c.nombre AS consultante, c.apellido
-FROM "SESION" s
-JOIN "VIDENTE"     v ON s.id_vidente    = v.id_vidente
-JOIN "CONSULTANTE" c ON s.id_consultante = c.id_consultante
+FROM SESION s
+JOIN VIDENTE     v ON s.id_vidente    = v.id_vidente
+JOIN CONSULTANTE c ON s.id_consultante = c.id_consultante
 ORDER BY s.fecha DESC`
   },
   // ── 7. JOIN + GROUP BY: sesiones por consultante ──
@@ -1541,8 +1541,8 @@ ORDER BY s.fecha DESC`
     desc:   'Cuántas sesiones ha tenido cada consultante',
     sql: `SELECT c.nombre, c.apellido, c.correo,
        COUNT(s.id_sesion) AS total_sesiones
-FROM "CONSULTANTE" c
-LEFT JOIN "SESION" s ON c.id_consultante = s.id_consultante
+FROM CONSULTANTE c
+LEFT JOIN SESION s ON c.id_consultante = s.id_consultante
 GROUP BY c.id_consultante, c.nombre, c.apellido, c.correo
 ORDER BY total_sesiones DESC`
   },
@@ -1553,7 +1553,7 @@ ORDER BY total_sesiones DESC`
     sql: `SELECT metodo_pago,
        COUNT(*)   AS cantidad_pagos,
        SUM(monto) AS total_recaudado
-FROM "PAGO"
+FROM PAGO
 WHERE estado = true
 GROUP BY metodo_pago
 ORDER BY total_recaudado DESC`
@@ -1564,8 +1564,8 @@ ORDER BY total_recaudado DESC`
     desc:   'Consultantes que han tenido más de 2 sesiones',
     sql: `SELECT c.nombre, c.apellido, c.correo,
        COUNT(s.id_sesion) AS total_sesiones
-FROM "CONSULTANTE" c
-JOIN "SESION" s ON c.id_consultante = s.id_consultante
+FROM CONSULTANTE c
+JOIN SESION s ON c.id_consultante = s.id_consultante
 GROUP BY c.id_consultante, c.nombre, c.apellido, c.correo
 HAVING COUNT(s.id_sesion) > 2
 ORDER BY total_sesiones DESC`
@@ -1579,10 +1579,10 @@ ORDER BY total_sesiones DESC`
        f.num_factura, f.total,
        p.metodo_pago, p.monto AS monto_pagado,
        CASE WHEN f.estado THEN 'Pagada' ELSE 'Pendiente' END AS estado_factura
-FROM "SESION" s
-JOIN "CONSULTANTE" c ON s.id_consultante = c.id_consultante
-JOIN "FACTURA"     f ON s.id_sesion      = f.id_sesion
-LEFT JOIN "PAGO"   p ON f.id_factura     = p.id_factura
+FROM SESION s
+JOIN CONSULTANTE c ON s.id_consultante = c.id_consultante
+JOIN FACTURA     f ON s.id_sesion      = f.id_sesion
+LEFT JOIN PAGO   p ON f.id_factura     = p.id_factura
 ORDER BY s.fecha DESC`
   },
   // ── 11. JOIN + signo zodiacal ──
@@ -1591,8 +1591,8 @@ ORDER BY s.fecha DESC`
     desc:   'Cada consultante con su signo zodiacal',
     sql: `SELECT c.nombre, c.apellido, c.correo, c.fecha_nacimiento,
        sz.nombre AS signo, sz.descripcion
-FROM "CONSULTANTE" c
-JOIN "SIGNO_ZODIACAL" sz ON c.id_signo = sz.id_signo
+FROM CONSULTANTE c
+JOIN SIGNO_ZODIACAL sz ON c.id_signo = sz.id_signo
 ORDER BY sz.nombre`
   },
   // ── 12. GROUP BY: conteo de consultantes por signo ──
@@ -1601,8 +1601,8 @@ ORDER BY sz.nombre`
     desc:   'Cuántos consultantes tiene cada signo',
     sql: `SELECT sz.nombre AS signo,
        COUNT(c.id_consultante) AS total_consultantes
-FROM "SIGNO_ZODIACAL" sz
-LEFT JOIN "CONSULTANTE" c ON sz.id_signo = c.id_signo
+FROM SIGNO_ZODIACAL sz
+LEFT JOIN CONSULTANTE c ON sz.id_signo = c.id_signo
 GROUP BY sz.id_signo, sz.nombre
 ORDER BY total_consultantes DESC`
   },
@@ -1613,8 +1613,8 @@ ORDER BY total_consultantes DESC`
     sql: `SELECT ca.nombre AS carta, ca.tipo, ca.numero,
        ca.descripcion_imagen,
        cat.elemento, cat.descripcion AS desc_categoria
-FROM "CARTA" ca
-JOIN "CATEGORIA" cat ON ca.id_categoria = cat.id_categoria
+FROM CARTA ca
+JOIN CATEGORIA cat ON ca.id_categoria = cat.id_categoria
 ORDER BY ca.numero`
   },
   // ── 14. GROUP BY: cartas por tipo ──
@@ -1625,7 +1625,7 @@ ORDER BY ca.numero`
        COUNT(*) AS total_cartas,
        MIN(numero) AS numero_min,
        MAX(numero) AS numero_max
-FROM "CARTA"
+FROM CARTA
 GROUP BY tipo
 ORDER BY tipo`
   },
@@ -1637,10 +1637,10 @@ ORDER BY tipo`
        c.nombre AS consultante, c.apellido AS ap_consultante,
        v.nombre AS vidente,     v.especialidad,
        r.respuesta_vidente
-FROM "RESENIA" r
-JOIN "CONSULTANTE" c ON r.id_consultante = c.id_consultante
-JOIN "SESION"      s ON r.id_sesion      = s.id_sesion
-JOIN "VIDENTE"     v ON s.id_vidente     = v.id_vidente
+FROM RESENIA r
+JOIN CONSULTANTE c ON r.id_consultante = c.id_consultante
+JOIN SESION      s ON r.id_sesion      = s.id_sesion
+JOIN VIDENTE     v ON s.id_vidente     = v.id_vidente
 ORDER BY r.clasificacion DESC`
   },
   // ── 16. HAVING: videntes con facturas pendientes > 0 ──
@@ -1650,9 +1650,9 @@ ORDER BY r.clasificacion DESC`
     sql: `SELECT v.nombre, v.apellido,
        COUNT(f.id_factura) AS facturas_pendientes,
        SUM(f.total)        AS monto_pendiente
-FROM "VIDENTE" v
-JOIN "SESION"  s ON v.id_vidente = s.id_vidente
-JOIN "FACTURA" f ON s.id_sesion  = f.id_sesion
+FROM VIDENTE v
+JOIN SESION  s ON v.id_vidente = s.id_vidente
+JOIN FACTURA f ON s.id_sesion  = f.id_sesion
 WHERE f.estado = false
 GROUP BY v.id_vidente, v.nombre, v.apellido
 HAVING COUNT(f.id_factura) > 0
@@ -1667,10 +1667,10 @@ ORDER BY monto_pendiente DESC`
        v.nombre  AS vidente,
        c.nombre  AS consultante, c.apellido,
        s.fecha   AS fecha_sesion, s.pregunta
-FROM "CHAT_SESION" ch
-JOIN "SESION"      s  ON ch.id_sesion      = s.id_sesion
-JOIN "VIDENTE"     v  ON ch.id_vidente     = v.id_vidente
-JOIN "CONSULTANTE" c  ON ch.id_consultante = c.id_consultante
+FROM CHAT_SESION ch
+JOIN SESION      s  ON ch.id_sesion      = s.id_sesion
+JOIN VIDENTE     v  ON ch.id_vidente     = v.id_vidente
+JOIN CONSULTANTE c  ON ch.id_consultante = c.id_consultante
 ORDER BY ch.fecha DESC`
   },
   // ── 18. GROUP BY + HAVING: tiradas con más de 3 cartas ──
@@ -1680,9 +1680,9 @@ ORDER BY ch.fecha DESC`
     sql: `SELECT t.nombre AS tirada, t.proposito, t.num_cartas,
        ca.nombre AS carta, ca.tipo,
        cat.elemento
-FROM "TIRADA" t
-JOIN "CARTA"    ca  ON t.id_carta    = ca.id_carta
-JOIN "CATEGORIA" cat ON ca.id_categoria = cat.id_categoria
+FROM TIRADA t
+JOIN CARTA    ca  ON t.id_carta    = ca.id_carta
+JOIN CATEGORIA cat ON ca.id_categoria = cat.id_categoria
 WHERE t.num_cartas > 3
 ORDER BY t.num_cartas DESC`
   },
@@ -1696,7 +1696,7 @@ ORDER BY t.num_cartas DESC`
   SUM(p.monto)      AS monto_total,
   AVG(p.monto)      AS monto_promedio,
   MAX(p.monto)      AS monto_maximo
-FROM "PAGO" p
+FROM PAGO p
 GROUP BY p.estado
 ORDER BY monto_total DESC`
   },
@@ -1710,12 +1710,12 @@ ORDER BY monto_total DESC`
        sz.nombre AS signo_zodiacal,
        t.nombre  AS tirada,   t.proposito,
        ca.nombre AS carta,    ca.tipo
-FROM "SESION" s
-JOIN "VIDENTE"       v   ON s.id_vidente     = v.id_vidente
-JOIN "CONSULTANTE"   c   ON s.id_consultante = c.id_consultante
-JOIN "SIGNO_ZODIACAL" sz ON c.id_signo       = sz.id_signo
-JOIN "TIRADA"        t   ON s.id_tirada      = t.id_tirada
-JOIN "CARTA"         ca  ON t.id_carta       = ca.id_carta
+FROM SESION s
+JOIN VIDENTE       v   ON s.id_vidente     = v.id_vidente
+JOIN CONSULTANTE  c   ON s.id_consultante = c.id_consultante
+JOIN SIGNO_ZODIACAL sz ON c.id_signo       = sz.id_signo
+JOIN TIRADA        t   ON s.id_tirada      = t.id_tirada
+JOIN CARTA         ca  ON t.id_carta       = ca.id_carta
 ORDER BY s.fecha DESC`
   }
 ];
@@ -1842,6 +1842,13 @@ const SQL = {
 
     out.innerHTML = '<span class="out-info">⏳ Ejecutando...</span>';
 
+    // Limpiar la consulta antes de enviar
+    const sqlClean = sql
+      .replace(/[‘’]/g, "'")   // comillas simples tipográficas
+      .replace(/[“”]/g, '"')   // comillas dobles tipográficas
+      .replace(/;\s*$/, '')             // quitar ; final
+      .trim();
+
     try {
       // ── Primero: RPC ejecutar_sql (soporta JOINs, GROUP BY, HAVING, etc.) ──
       const rpcRes = await fetch(`${SB_URL}/rest/v1/rpc/ejecutar_sql`, {
@@ -1851,28 +1858,28 @@ const SQL = {
           'apikey':        SB_KEY,
           'Authorization': `Bearer ${SB_KEY}`
         },
-        body: JSON.stringify({ consulta: sql })
+        body: JSON.stringify({ consulta: sqlClean })
       });
 
+      const rpcText = await rpcRes.text();
+
       if (rpcRes.ok) {
-        const raw  = await rpcRes.json();
-        let rows   = raw;
-        if (typeof raw === 'string') { try { rows = JSON.parse(raw); } catch { rows = []; } }
-        if (!rows || rows === null)  rows = [];
+        let rows = null;
+        try { rows = JSON.parse(rpcText); } catch { rows = []; }
+        if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch { rows = []; } }
+        if (!rows || rows === null) rows = [];
         this._mostrar(out, rows, sql);
       } else {
-        // ── Fallback: REST API para SELECTs simples ──
-        await rpcRes.text(); // consumir body
-        const r2 = await this._restSQL(sql);
-        this._mostrar(out, r2, sql);
+        // RPC falló — mostrar error real
+        let msg = rpcText;
+        try {
+          const parsed = JSON.parse(rpcText);
+          msg = parsed.message || parsed.hint || rpcText;
+        } catch {}
+        out.innerHTML = `<span class="out-err">❌ Error (${rpcRes.status}): ${msg}</span>`;
       }
     } catch(e) {
-      try {
-        const r2 = await this._restSQL(sql);
-        this._mostrar(out, r2, sql);
-      } catch(e2) {
-        out.innerHTML = `<span class="out-err">❌ Error: ${e2.message}</span>`;
-      }
+      out.innerHTML = `<span class="out-err">❌ Error de conexión: ${e.message}</span>`;
     }
   },
 
